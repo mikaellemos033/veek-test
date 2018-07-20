@@ -8,8 +8,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\User;
-use App\Requests\Users\Create;
-use App\Requests\Users\Update;
+use App\Http\Requests\Users\Create;
+use App\Http\Requests\Users\Update;
 
 class Users extends Controller
 {
@@ -36,7 +36,7 @@ class Users extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        
+
         if (!$user) {
 
             return response()->json([
@@ -61,7 +61,7 @@ class Users extends Controller
      */
     public function store(Create $request)
     {
-        $user = User::create($request->only['name', 'email']);
+        $user = User::create($request->only(['name', 'email']));
         return response()->json([
             'success' => true,
             'message' => 'User created',

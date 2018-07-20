@@ -4,13 +4,13 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class AppControllersApiUsersTest extends TestCase
+class UsersTest extends TestCase
 {
     public function testIndex()
-    {	
+    {
     	$response = $this->call('GET', 'users');
     	$content  = json_decode($response->content());
-    	
+
     	$this->assertEquals(200, $response->status());
     	$this->assertEquals('All users', $content->message);
     }
@@ -22,14 +22,14 @@ class AppControllersApiUsersTest extends TestCase
     	$content  = json_decode($response->content());
 
     	$this->assertEquals(200, $response->status());
-    	$this->assertEquals('All found', $content->message);
+    	$this->assertEquals('User found', $content->message);
     	$this->assertEquals($user->id, $content->data->id);
     }
 
     public function testCreate()
     {
     	$params   = factory(App\User::class)->make();
-    	$response = $this->response('POST', 'users', $params->toArray());
+    	$response = $this->call('POST', 'users', $params->toArray());
     	$content  = json_decode($response->content());
 
     	$this->assertEquals(201, $response->status());
@@ -40,7 +40,7 @@ class AppControllersApiUsersTest extends TestCase
     public function testUpdate()
     {
     	$user     = factory(App\User::class)->create();
-    	$response = $this->response('PUT', sprintf('users/%d', $user->id), ['name' => 'Clemente josé']);
+    	$response = $this->call('PUT', sprintf('users/%d', $user->id), ['name' => 'Clemente josé']);
     	$content  = json_decode($response->content());
 
     	$userUp   = App\User::find($user->id);
@@ -53,11 +53,12 @@ class AppControllersApiUsersTest extends TestCase
     public function testDestroy()
     {
     	$user     = factory(App\User::class)->create();
-    	$response = $this->response('DELETE', sprintf('users/%d', $user->id));
+    	$response = $this->call('DELETE', sprintf('users/%d', $user->id));
+        $content  = json_decode($response->content());
     	$find     = App\User::find($user->id);
 
     	$this->assertEquals(200, $response->status());
-    	$this->assertEquals('User deleted', $response->message);
-    	$this->assertTrue(empty($user));
+    	$this->assertEquals('User deleted', $content->message);
+    	$this->assertTrue(empty($find));
     }
 }

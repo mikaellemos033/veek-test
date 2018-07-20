@@ -16,4 +16,4 @@ Route::get('/', function () {
 });
 
 
-Route::resource('users', 'Api\Users@index');
+Route::resource('users', 'Api\Users');
